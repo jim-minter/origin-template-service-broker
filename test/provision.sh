@@ -11,7 +11,7 @@ req="{
 }"
 
 curl \
-  -X PUT
+  -X PUT \
   -H 'X-Broker-API-Version: 2.9' \
   -H 'Content-Type: application/json' \
   -d "$req" \
