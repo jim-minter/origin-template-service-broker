@@ -7,7 +7,6 @@ import (
 	"github.com/openshift/origin/pkg/config/cmd"
 	projectapi "github.com/openshift/origin/pkg/project/api"
 	templateapi "github.com/openshift/origin/pkg/template/api"
-	"github.com/openshift/origin/pkg/util"
 	"github.com/pborman/uuid"
 	kapi "k8s.io/kubernetes/pkg/api"
 	kerrors "k8s.io/kubernetes/pkg/api/errors"
@@ -30,6 +29,7 @@ func projectRequestFromUUID(u uuid.UUID) *projectapi.ProjectRequest {
 }
 
 func (b Broker) templateFromUUID(u uuid.UUID) (*templateapi.Template, error) {
+	// TODO: cache this
 	templateList, err := b.oc.Templates("openshift").List(kapi.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -61,6 +61,8 @@ func (b Broker) Provision(instanceUUID uuid.UUID, req *broker.ProvisionRequest) 
 		}
 	}
 
+	template.ObjectLabels[serviceInstanceLabel] = instanceUUID.String()
+
 	template, err = b.oc.TemplateConfigs(b.namespace).Create(template)
 	if err != nil {
 		return nil, err
@@ -69,10 +71,6 @@ func (b Broker) Provision(instanceUUID uuid.UUID, req *broker.ProvisionRequest) 
 	errs := runtime.DecodeList(template.Objects, kapi.Codecs.UniversalDecoder())
 	if len(errs) > 0 {
 		return nil, errors.Errors(errs)
-	}
-
-	for _, obj := range template.Objects {
-		util.AddObjectLabels(obj, labels.Set{serviceInstanceLabel: instanceUUID.String()})
 	}
 
 	namespace := b.namespace
