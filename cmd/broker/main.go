@@ -3,10 +3,10 @@ package main
 import (
 	"net"
 	"net/http"
-	"github.com/jim-minter/origin-template-service-broker/pkg/broker/template"
-	"github.com/jim-minter/origin-template-service-broker/pkg/handler"
 
 	"github.com/golang/glog"
+	"github.com/jim-minter/origin-template-service-broker/pkg/broker/template"
+	"github.com/jim-minter/origin-template-service-broker/pkg/handler"
 	"github.com/openshift/origin/pkg/cmd/flagtypes"
 	"github.com/openshift/origin/pkg/cmd/util/clientcmd"
 	"github.com/spf13/pflag"

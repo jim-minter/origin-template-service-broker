@@ -3,7 +3,6 @@ Templates:
  - define what delete a deployed template means (done by labels? by recording
    created objects? by storing template at creation time?)
  - consider defining how to determine if a set of objects matches a template?
- - find a way to give templates globally unique IDs
  - find a way to define bindable outputs from templates (credentials? k8s
    services? endpoints?)
  - consider defining standardised image url, provider name, doc url, support url

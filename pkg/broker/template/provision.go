@@ -3,10 +3,10 @@ package template
 import (
 	"github.com/jim-minter/origin-template-service-broker/pkg/broker"
 	"github.com/jim-minter/origin-template-service-broker/pkg/errors"
-
 	"github.com/openshift/origin/pkg/cmd/util/clientcmd"
 	"github.com/openshift/origin/pkg/config/cmd"
 	projectapi "github.com/openshift/origin/pkg/project/api"
+	templateapi "github.com/openshift/origin/pkg/template/api"
 	"github.com/openshift/origin/pkg/util"
 	"github.com/pborman/uuid"
 	kapi "k8s.io/kubernetes/pkg/api"
@@ -27,6 +27,21 @@ func projectRequestFromUUID(u uuid.UUID) *projectapi.ProjectRequest {
 	return &projectapi.ProjectRequest{
 		ObjectMeta: kapi.ObjectMeta{Name: u.String()},
 	}
+}
+
+func (b Broker) templateFromUUID(u uuid.UUID) (*templateapi.Template, error) {
+	templateList, err := b.oc.Templates("openshift").List(kapi.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, template := range templateList.Items {
+		if uuid.Equal(uuid.Parse(string(template.GetUID())), u) {
+			return &template, nil
+		}
+	}
+
+	return nil, kerrors.NewNotFound(templateapi.Resource("templates"), u.String())
 }
 
 func (b Broker) Provision(instanceUUID uuid.UUID, req *broker.ProvisionRequest) (*broker.ProvisionResponse, error) {

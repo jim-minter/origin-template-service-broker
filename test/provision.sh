@@ -3,7 +3,7 @@
 . shared.sh
 
 planUUID=${planUUID-$defaultplanUUID}
-serviceUUID=${serviceUUID-$rubyhelloworldsampleUUID}
+serviceUUID=${serviceUUID-$(oc get template ruby-helloworld-sample -n openshift -o template --template '{{.metadata.uid}}')}
 
 req="{
   \"plan_id\": \"$planUUID\",

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"github.com/jim-minter/origin-template-service-broker/pkg/broker"
 
+	"github.com/jim-minter/origin-template-service-broker/pkg/broker"
 	kerrors "k8s.io/kubernetes/pkg/api/errors"
 )
 

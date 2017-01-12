@@ -1,17 +1,18 @@
 package template
 
 import (
-	"github.com/jim-minter/origin-template-service-broker/pkg/broker"
 	"strings"
 
+	"github.com/jim-minter/origin-template-service-broker/pkg/broker"
 	template "github.com/openshift/origin/pkg/template/api"
+	"github.com/pborman/uuid"
 	kapi "k8s.io/kubernetes/pkg/api"
 )
 
 func (b Broker) serviceFromTemplate(template *template.Template) *broker.Service {
 	return &broker.Service{
 		Name:        template.Name,
-		ID:          b.uuidFromTemplate(template), // TODO: have the apiserver generate a fixed UUID upon template admission
+		ID:          uuid.Parse(string(template.GetUID())),
 		Description: template.Annotations["description"],
 		Tags:        strings.Split(template.Annotations["tags"], ","),
 		Bindable:    false, // TODO
