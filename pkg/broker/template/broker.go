@@ -4,11 +4,13 @@ import (
 	"github.com/openshift/origin/pkg/client"
 	"github.com/openshift/origin/pkg/cmd/util/clientcmd"
 	"k8s.io/kubernetes/pkg/client/transport"
+	kclient "k8s.io/kubernetes/pkg/client/unversioned"
 )
 
 type Broker struct {
 	factory        *clientcmd.Factory
 	oc             *client.Client
+	kc             *kclient.Client
 	namespace      string
 	createProjects bool
 }
@@ -19,7 +21,7 @@ func NewBroker(factory *clientcmd.Factory, createProjects bool) (*Broker, error)
 		return nil, err
 	}
 
-	oc, _, _, err := factory.Clients()
+	oc, kc, _, err := factory.Clients()
 	if err != nil {
 		return nil, err
 	}
@@ -29,6 +31,7 @@ func NewBroker(factory *clientcmd.Factory, createProjects bool) (*Broker, error)
 	return &Broker{
 		factory:        factory,
 		oc:             oc,
+		kc:             kc,
 		namespace:      namespace,
 		createProjects: createProjects,
 	}, nil

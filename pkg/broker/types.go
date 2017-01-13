@@ -101,10 +101,10 @@ type BindRequest struct {
 }
 
 type BindResponse struct {
-	Credentials     map[string]string `json:"credentials,omitempty"`
-	SyslogDrainURL  string            `json:"syslog_drain_url,omitempty"`
-	RouteServiceURL string            `json:"route_service_url,omitempty"`
-	VolumeMounts    []interface{}     `json:"volume_mounts,omitempty"`
+	Credentials     map[string]interface{} `json:"credentials,omitempty"`
+	SyslogDrainURL  string                 `json:"syslog_drain_url,omitempty"`
+	RouteServiceURL string                 `json:"route_service_url,omitempty"`
+	VolumeMounts    []interface{}          `json:"volume_mounts,omitempty"`
 }
 
 type DeprovisionResponse struct {

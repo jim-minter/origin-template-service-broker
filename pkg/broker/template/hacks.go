@@ -15,10 +15,12 @@ var plans = []broker.Plan{
 }
 
 // copied from github.com/openshift/origin/pkg/cmd/util/clientcmd/shortcut_restmapper.go
-var userResources = []string{
+var userResourcesCopy = []string{
 	"buildconfigs", "builds",
 	"imagestreams",
 	"deploymentconfigs", "replicationcontrollers",
 	"routes", "services",
 	"pods",
 }
+
+var userResources = append(userResourcesCopy, "configmaps")

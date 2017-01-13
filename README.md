@@ -25,7 +25,9 @@ In terminal 2:
 cd $GOPATH/src/github.com/jim-minter/origin-template-service-broker
 test/catalog.sh
 test/provision.sh
-test/unprovision.sh
+test/bind.sh
+test/unbind.sh
+test/deprovision.sh
 ```
 
 ## Links

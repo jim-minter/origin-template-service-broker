@@ -19,6 +19,7 @@ import (
 )
 
 const serviceInstanceLabel = "service-instance"
+const templateConfigMapPrefix = "service-instance-"
 
 var accessor = meta.NewAccessor()
 
@@ -68,6 +69,22 @@ func (b Broker) Provision(instanceUUID uuid.UUID, req *broker.ProvisionRequest) 
 		return nil, err
 	}
 
+	// TODO: discuss what the appropriate place for this state is
+	configmap := &kapi.ConfigMap{
+		ObjectMeta: kapi.ObjectMeta{
+			Name: templateConfigMapPrefix + instanceUUID.String(),
+			Labels: map[string]string{
+				serviceInstanceLabel: instanceUUID.String(),
+			},
+		},
+		Data: map[string]string{},
+	}
+
+	for _, param := range template.Parameters {
+		// TODO: check that any valid param.Name is a valid ConfigMap data key
+		configmap.Data[param.Name] = param.Value
+	}
+
 	errs := runtime.DecodeList(template.Objects, kapi.Codecs.UniversalDecoder())
 	if len(errs) > 0 {
 		return nil, errors.Errors(errs)
@@ -92,6 +109,12 @@ func (b Broker) Provision(instanceUUID uuid.UUID, req *broker.ProvisionRequest) 
 		return nil, errors.Errors(errs)
 	}
 
+	configmap, err = b.kc.ConfigMaps(namespace).Create(configmap)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: rollback on error?
 	// TODO: wait for the template to finish deploying?
 
 	return &broker.ProvisionResponse{}, nil
@@ -113,8 +136,8 @@ func (b Broker) Deprovision(instanceUUID uuid.UUID) (*broker.DeprovisionResponse
 	} else {
 		// TODO: what follows is horrible
 
-		req, _ := labels.NewRequirement(serviceInstanceLabel, selection.Equals, sets.NewString(instanceUUID.String()))
-		selector := labels.NewSelector().Add(*req)
+		requirement, _ := labels.NewRequirement(serviceInstanceLabel, selection.Equals, sets.NewString(instanceUUID.String()))
+		selector := labels.NewSelector().Add(*requirement)
 
 		resourcemapper := clientcmd.ResourceMapper(b.factory)
 
