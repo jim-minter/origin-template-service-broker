@@ -7,7 +7,10 @@ serviceUUID=${serviceUUID-$(oc get template ruby-helloworld-sample -n openshift 
 
 req="{
   \"plan_id\": \"$planUUID\",
-  \"service_id\": \"$serviceUUID\"
+  \"service_id\": \"$serviceUUID\",
+  \"parameters\": {
+    \"MYSQL_USER\": \"username\"
+  }
 }"
 
 curl \

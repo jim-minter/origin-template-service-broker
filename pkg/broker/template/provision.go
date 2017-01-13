@@ -90,6 +90,8 @@ func (b Broker) Provision(instanceUUID uuid.UUID, req *broker.ProvisionRequest) 
 		return nil, errors.Errors(errs)
 	}
 
+	// TODO: if !b.createProjects, need to signal a namespace and presumably a
+	// user for impersonation
 	namespace := b.namespace
 	if b.createProjects {
 		project, err := b.oc.ProjectRequests().Create(projectRequestFromUUID(instanceUUID))

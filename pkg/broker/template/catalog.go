@@ -23,6 +23,7 @@ func (b Broker) serviceFromTemplate(template *template.Template) *broker.Service
 			// TODO: "providerDisplayName": "",
 			// TODO: "documentationUrl":    "",
 			// TODO: "supportUrl":          "",
+			// TODO: list template parameters?
 		},
 		PlanUpdatable: false, // TODO
 		Plans:         plans, // TODO

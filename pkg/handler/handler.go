@@ -10,6 +10,7 @@ import (
 )
 
 // TODO: implement asynchronous operations
+// TODO: authentication / authorization
 
 type handler struct {
 	router mux.Router
