@@ -15,7 +15,7 @@ func (b Broker) serviceFromTemplate(template *template.Template) *broker.Service
 		ID:          uuid.Parse(string(template.GetUID())),
 		Description: template.Annotations["description"],
 		Tags:        strings.Split(template.Annotations["tags"], ","),
-		Bindable:    false, // TODO
+		Bindable:    true,
 		Metadata: map[string]interface{}{
 			"displayName": template.Annotations["openshift.io/display-name"],
 			// TODO: "imageUrl":            "",
